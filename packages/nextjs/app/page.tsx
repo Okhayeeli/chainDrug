@@ -2,13 +2,56 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
+import { useSigner } from "~~/utils/scaffold-eth/eas-wagmi-utils";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
+
+  const signer = useSigner();
+
+  const attestProductProvenace = async () => {
+    const easContractAddress = "0x4200000000000000000000000000000000000021";
+    const schemaUID = "0xa18f97dfff3f61f3577d9019d0af390b2375d315555482fe379256b504e6d5e4";
+    const eas = new EAS(easContractAddress);
+    // Signer must be an ethers-like signer.
+
+    if (signer) {
+      await eas.connect(signer);
+    }
+
+    // Initialize SchemaEncoder with the schema string
+    const schemaEncoder = new SchemaEncoder(
+      "bytes32 productId,string productName,address producerAddress,bytes32 batchId,uint64 productionDate,uint64 expirationDate",
+    );
+    const encodedData = schemaEncoder.encodeData([
+      {
+        name: "productId",
+        value: "0x6162633132330000000000000000000000000000000000000000000000000000",
+        type: "bytes32",
+      },
+      { name: "productName", value: "abc123", type: "string" },
+      { name: "producerAddress", value: "0x0000000000000000000000000000000000000000", type: "address" },
+      { name: "batchId", value: "0x6162633132330000000000000000000000000000000000000000000000000000", type: "bytes32" },
+      { name: "productionDate", value: "0", type: "uint64" },
+      { name: "expirationDate", value: "0", type: "uint64" },
+    ]);
+    const tx = await eas.attest({
+      schema: schemaUID,
+      data: {
+        recipient: "0x0000000000000000000000000000000000000000",
+        expirationTime: 0n,
+        revocable: true, // Be aware that if your schema is not revocable, this MUST be false
+        data: encodedData,
+      },
+    });
+    const newAttestationUID = await tx.wait();
+    console.log("New attestation UID:", newAttestationUID);
+  };
 
   return (
     <>
@@ -43,6 +86,12 @@ const Home: NextPage = () => {
               packages/hardhat/contracts
             </code>
           </p>
+        </div>
+
+        <div className="pt-10" data-tip="Attest Product Provenance">
+          <button className="btn btn-secondary btn-sm px-2 rounded-full" onClick={() => attestProductProvenace()}>
+            Attest Product Provenance
+          </button>
         </div>
 
         <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">

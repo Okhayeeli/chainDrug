@@ -6,14 +6,14 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
   31337: {
-    YourContract: {
+    GMattester: {
       address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
           inputs: [
             {
-              internalType: "address",
-              name: "_owner",
+              internalType: "contract IEAS",
+              name: "eas",
               type: "address",
             },
           ],
@@ -21,130 +21,150 @@ const deployedContracts = {
           type: "constructor",
         },
         {
-          anonymous: false,
+          inputs: [],
+          name: "InvalidEAS",
+          type: "error",
+        },
+        {
           inputs: [
             {
-              indexed: true,
-              internalType: "address",
-              name: "greetingSetter",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "string",
-              name: "newGreeting",
-              type: "string",
-            },
-            {
-              indexed: false,
               internalType: "bool",
-              name: "premium",
-              type: "bool",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "value",
-              type: "uint256",
-            },
-          ],
-          name: "GreetingChange",
-          type: "event",
-        },
-        {
-          inputs: [],
-          name: "greeting",
-          outputs: [
-            {
-              internalType: "string",
-              name: "",
-              type: "string",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "owner",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "premium",
-          outputs: [
-            {
-              internalType: "bool",
-              name: "",
+              name: "input",
               type: "bool",
             },
           ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "string",
-              name: "_newGreeting",
-              type: "string",
-            },
-          ],
-          name: "setGreeting",
-          outputs: [],
-          stateMutability: "payable",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "totalCounter",
+          name: "attestGM",
           outputs: [
             {
-              internalType: "uint256",
+              internalType: "bytes32",
               name: "",
-              type: "uint256",
+              type: "bytes32",
             },
           ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          name: "userGreetingCounter",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "withdraw",
-          outputs: [],
           stateMutability: "nonpayable",
           type: "function",
         },
         {
-          stateMutability: "payable",
-          type: "receive",
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "schema",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "input",
+              type: "uint256",
+            },
+          ],
+          name: "attestUint",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+    ProductProvenanceAttester: {
+      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "contract IEAS",
+              name: "eas",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "InvalidEAS",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32",
+                  name: "productId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "string",
+                  name: "productName",
+                  type: "string",
+                },
+                {
+                  internalType: "address",
+                  name: "producerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "batchId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "uint64",
+                  name: "productionDate",
+                  type: "uint64",
+                },
+                {
+                  internalType: "uint64",
+                  name: "expirationDate",
+                  type: "uint64",
+                },
+              ],
+              internalType:
+                "struct ProductProvenanceAttester.ProductProvenance",
+              name: "input",
+              type: "tuple",
+            },
+          ],
+          name: "attestProductProvenance",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "schema",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "input",
+              type: "uint256",
+            },
+          ],
+          name: "attestUint",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
         },
       ],
       inheritedFunctions: {},
@@ -179,6 +199,104 @@ const deployedContracts = {
             },
           ],
           name: "attestGM",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "schema",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "input",
+              type: "uint256",
+            },
+          ],
+          name: "attestUint",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+    ProductProvenanceAttester: {
+      address: "0xB6b14C427cA0AC44FE9a41332e8fE9BB4Ef244Ce",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "contract IEAS",
+              name: "eas",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "InvalidEAS",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32",
+                  name: "productId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "string",
+                  name: "productName",
+                  type: "string",
+                },
+                {
+                  internalType: "address",
+                  name: "producerAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "batchId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "uint64",
+                  name: "productionDate",
+                  type: "uint64",
+                },
+                {
+                  internalType: "uint64",
+                  name: "expirationDate",
+                  type: "uint64",
+                },
+              ],
+              internalType:
+                "struct ProductProvenanceAttester.ProductProvenance",
+              name: "input",
+              type: "tuple",
+            },
+          ],
+          name: "attestProductProvenance",
           outputs: [
             {
               internalType: "bytes32",
